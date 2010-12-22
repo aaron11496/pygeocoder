@@ -1,13 +1,16 @@
 #!/usr/bin/env python
-
-# Copyright 2009 John Kleint
 #
-# This is free software, licensed under the Lesser Affero General 
-# Public License, available in the accompanying LICENSE.txt file.
+# Xiao Yu - Montreal - 2010
+# Based on googlemaps by John Kleint
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 
 
 """
-Unit tests for googlemaps.
+Unit tests for pygeocoder.
 
 """
 
@@ -15,12 +18,8 @@ Unit tests for googlemaps.
 import unittest
 import doctest
     
-import googlemaps
-from googlemaps import GoogleMaps    
-
-    
-# You might need an actual key to run the tests.
-GMAPS_API_KEY = open('gmaps-api-key.txt').readline().strip() 
+import pygeocoder
+from pygeocoder import Geocoder    
 
 
 def searchkey(obj, key):
@@ -88,47 +87,6 @@ class Test(unittest.TestCase):
         
         addr2 = gmaps.latlng_to_address(lat, lng)
         self.assertEqual(addr, addr2)
-        
-
-    def test_local_search(self):
-        """Test googlemaps local_search()."""
-        gmaps = GoogleMaps(GMAPS_API_KEY, referrer_url='http://www.google.com/')
-        local = gmaps.local_search('sushi san francisco, ca')
-        result = local['responseData']['results'][0]
-        self.assertEqual(result['titleNoFormatting'], 'Sushi Groove')
-        
-        results = gmaps.local_search('Starbucks Los Angeles, CA', numresults=GoogleMaps.MAX_LOCAL_RESULTS)
-        self.assertEqual(results['responseStatus'], googlemaps.STATUS_OK)
-        self.assertNotEqual(results['responseData'], None)
-        self.assertNotEqual(results['responseData']['cursor'], None)
-        results = results['responseData']['results']
-        self.assertEqual(len(results), GoogleMaps.MAX_LOCAL_RESULTS)
-        for result in results:
-            self.assertEqual(result['GsearchResultClass'], 'GlocalSearch')
-            self.assert_(result['titleNoFormatting'].lower().find('starbucks') >= 0)
-            self.assertEqual(result['region'], 'CA')
-        
-
-    def test_directions(self):
-        """Test googlemaps directions()"""
-        
-        gmaps = GoogleMaps(GMAPS_API_KEY)
-        results = gmaps.directions('Constitution Ave NW & 10th St NW, Washington, DC',
-                                   'Independence and 6th SW, Washington, DC 20024, USA')
-        self.assertEqual(results['Status']['code'], googlemaps.STATUS_OK)
-        self.assert_(results['Directions']['Duration']['seconds'] in range(100, 130))
-        self.assert_(results['Directions']['Distance']['meters'] in range(1000, 1050))
-        routes = results['Directions']['Routes']
-        self.assert_(len(routes) >= 1)
-        self.assertEqual(routes[0]['Duration'], results['Directions']['Duration'])
-        self.assertEqual(routes[0]['Distance'], results['Directions']['Distance'])
-        self.assert_(routes[0]['Steps'][0]['descriptionHtml'].find('Constitution Ave') >= 0)
-        self.assert_(routes[0]['Steps'][1]['descriptionHtml'].find('7th St') >= 0)
-        self.assert_(routes[0]['Steps'][2]['descriptionHtml'].find('Independence Ave') >= 0)
-        
-    def test_doctests(self):
-        """Run googlemaps doctests"""
-        doctest.testmod(googlemaps, extraglobs={'api_key': GMAPS_API_KEY})
 
         
 if __name__ == "__main__":

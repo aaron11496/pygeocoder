@@ -293,8 +293,9 @@ class Geocoder:
 
 if __name__ == "__main__":
     import sys
+    from optparse import OptionParser
 
-    def main(argv):
+    def main():
         """
         Geocodes a location given on the command line.
 
@@ -306,13 +307,18 @@ if __name__ == "__main__":
         they are separated by a comma and no space.
 
         """
+        usage = "usage: %prog [options] address"
+        parser = OptionParser(usage, version=VERSION)
+        parser.add_option("-k", "--key",
+                  dest="key", help="Your Google Maps API key")
+        (options, args) = parser.parse_args()
 
-        if len(argv) < 2 or len(argv) > 4:
-            print main.__doc__
+        if len(args) != 1:
+            parser.print_usage()
             sys.exit(1)
 
-        query = argv[1]
-        gcoder = Geocoder(argv[2])
+        query = args[0]
+        gcoder = Geocoder(options.key)
 
         try:
             result = gcoder.geocode(query)
@@ -323,4 +329,4 @@ if __name__ == "__main__":
         json.dump(result, sys.stdout, indent=4)
         sys.stdout.write('\n')
 
-    main(sys.argv)
+    main()

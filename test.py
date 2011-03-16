@@ -19,7 +19,7 @@ import unittest
 import doctest
     
 import pygeocoder
-from pygeocoder import Geocoder    
+from pygeocoder import Geocoder, GeocoderResult 
 
 
 def searchkey(obj, key):
@@ -43,49 +43,55 @@ class Test(unittest.TestCase):
     """Unit tests for googlemaps."""
 
     def test_geocode(self):
-        """Test googlemaps geocode() and address_to_latlng()"""
+        """Test pygeocoder geocode() and address_to_latlng()"""
 
         addr = '1600 amphitheatre mountain view ca'
-        gmaps = GoogleMaps(GMAPS_API_KEY)
-        result = gmaps.geocode(addr)
-        self.assertEqual(result['Status']['code'], 200)
-        self.assertEqual(searchkey(result, 'CountryName'), 'USA')
-        self.assertEqual(searchkey(result, 'PostalCodeNumber'), '94043')
-        self.assertEqual(searchkey(result, 'ThoroughfareName'), '1600 Amphitheatre Pkwy')
-        self.assertEqual(searchkey(result, 'LocalityName'), 'Mountain View')
-        self.assertEqual(searchkey(result, 'AdministrativeAreaName'), 'CA')
-        self.assertEqual(searchkey(result, 'CountryNameCode'), 'US')
-        self.assertEqual(searchkey(result, 'address'), '1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA')
-        lat, lng = searchkey(result, 'coordinates')[1::-1]
-        self.assertAlmostEquals(lat,   37.422125, 3)
-        self.assertAlmostEquals(lng, -122.084466, 3)
+        g = Geocoder()
+        data = g.geocode(addr)
+        results = GeocoderResult(data)
+        result = results.next()
 
-        (lat2, lng2) = gmaps.address_to_latlng(addr)
+        self.assertEqual(result.country__long_name, 'United States')
+        self.assertEqual(result.postal_code, '94043')
+        self.assertEqual(result.street_number, '1600')
+        self.assertEqual(result.route, 'Amphitheatre Pkwy')
+        self.assertEqual(result.locality, 'Mountain View')
+        self.assertEqual(result.administrative_area_level_1, 'CA')
+        self.assertEqual(result.country, 'US')
+        self.assertEqual(result.formatted_address, '1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA')
+        lat, lng = result.location
+        self.assertAlmostEquals(lat, 37.422125, 3)
+        self.assertAlmostEquals(lng, -122.085984, 3)
+
+        (lat2, lng2) = g.address_to_latlng(addr)
         self.assertAlmostEqual(lat, lat2, 3)
-        self.assertAlmostEqual(lng2, lng2, 3)
+        self.assertAlmostEqual(lng, lng2, 3)
 
 
     def test_reverse_geocode(self):
-        """Test googlemaps reverse_geocode() and latlng_to_address()"""
+        """Test pygeocoder reverse_geocode() and latlng_to_address()"""
         
         lat, lng = 40.714224, -73.961452
-        gmaps = GoogleMaps(GMAPS_API_KEY)
-        result = gmaps.reverse_geocode(lat, lng)
-        self.assertEqual(result['Status']['code'], 200)
-        result = result['Placemark'][0]
-        self.assertEqual(searchkey(result, 'CountryName'), 'USA')
-        self.assertEqual(searchkey(result, 'PostalCodeNumber'), '11211')
-        self.assertEqual(searchkey(result, 'ThoroughfareName'), '277 Bedford Ave')
-        self.assertEqual(searchkey(result, 'LocalityName'), 'Brooklyn')
-        self.assertEqual(searchkey(result, 'AdministrativeAreaName'), 'NY')
-        self.assertEqual(searchkey(result, 'CountryNameCode'), 'US')
-        addr = searchkey(result, 'address')
-        self.assertEqual(addr, '277 Bedford Ave, Brooklyn, NY 11211, USA')
-        lat2, lng2 = searchkey(result, 'coordinates')[1::-1]
+        g = Geocoder()
+        data = g.reverse_geocode(lat, lng)
+        results = GeocoderResult(data)
+        result = results.next()
+
+        self.assertEqual(result.country__long_name, 'United States')
+        self.assertEqual(result.postal_code, '11211')
+        self.assertEqual(result.street_number, '279-281')
+        self.assertEqual(result.route, 'Bedford Ave')
+        self.assertEqual(result.sublocality, 'Brooklyn')
+        self.assertEqual(result.locality, 'New York')
+        self.assertEqual(result.administrative_area_level_1, 'NY')
+        self.assertEqual(result.country, 'US')
+        addr = result.formatted_address
+        self.assertEqual(addr, '279-281 Bedford Ave, Brooklyn, NY 11211, USA')
+        lat2, lng2 = result.location
         self.assertAlmostEquals(lat, lat2, 3)
         self.assertAlmostEquals(lng, lng2, 3)
         
-        addr2 = gmaps.latlng_to_address(lat, lng)
+        addr2 = g.latlng_to_address(lat, lng)
         self.assertEqual(addr, addr2)
 
         

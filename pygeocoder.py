@@ -25,7 +25,7 @@ except ImportError:
 
 
 VERSION = '1.0'
-__all__ = ['Geocoder', 'GeocoderError']
+__all__ = ['Geocoder', 'GeocoderError', 'GeocoderResult']
 
 
 class GeocoderError(Exception):
@@ -66,6 +66,76 @@ class GeocoderError(Exception):
     def __unicode__(self):
         """Return a unicode representation of this :exc:`GeocoderError`."""
         return unicode(self.__str__())
+
+
+class GeocoderResult(object):
+    """
+    A geocoder resultset to iterate through address results.
+    Exemple:
+
+    g = Geocoder()
+    data = g.geocode('paris, us')
+    results = GeocoderResult(data)
+    for result in results:
+        print result.formatted_address, result.location
+
+    Provide shortcut to ease field retrieval, looking at 'types' in each
+    'address_components'.
+    Example:
+        result.country
+        result.postal_code
+    
+    You can also choose a different property to display for each lookup type.
+    Example:
+        result.country__long_name
+
+    By default, use 'short_name' property of lookup type, so:
+        result.country
+    and:
+        result.country__short_name
+    are equivalent.
+    """
+    def __init__(self, data):
+        self.data = data
+        self.count = self.len = len(self.data)
+        self.result = self.data[0]
+    
+    def __len__(self):
+        return self.len
+    
+    def __iter__(self):
+        return self
+    
+    def next(self):
+        if self.count <= 0:
+            raise StopIteration
+        index = self.len - self.count
+        self.result = self.data[index]
+        self.count -= 1
+        return self
+    
+    @property
+    def location(self):
+        """
+        Return a (latitude, longitude) location pair of the current result
+        """
+        location = self.result['geometry']['location']
+        return location['lat'], location['lng']
+    
+    @property
+    def formatted_address(self):
+        return self.result['formatted_address']
+    
+    def __getattr__(self, name):
+        lookup = name.split('__')
+        attr = lookup[0]
+        try:
+            prop = lookup[1]
+        except IndexError:
+            prop = 'short_name'
+        for elem in self.result['address_components']:
+            if attr in elem['types']:
+                return elem[prop]
 
 
 class Geocoder:
@@ -200,7 +270,8 @@ class Geocoder:
         :raises GoogleMapsError: If the address could not be geocoded.
 
         """
-        return tuple(self.geocode(address)[0]['geometry']['location'].values())
+        location = self.geocode(address)[0]['geometry']['location']
+        return location['lat'], location['lng']
 
     def latlng_to_address(self, lat, lng):
         """

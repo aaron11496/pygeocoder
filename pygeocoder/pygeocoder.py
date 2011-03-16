@@ -112,13 +112,13 @@ class Geocoder:
 		"""
 		encoded_params = urllib.urlencode(params)	 
 		url = self.GEOCODE_QUERY_URL + encoded_params
-		print url
+
 		request = urllib2.Request(url)
 		response = urllib2.urlopen(request)
-		print response
+
 		j = json.load(response)
 		if j['status'] != GeocoderError.G_GEO_OK:
-			raise GoogleMapsError(j['status'], url)
+			raise GeocoderError(j['status'], url)
 		return j['results']
 		
 	def geocode(self, address, sensor='false', bounds='', region='', language=''):

@@ -49,8 +49,7 @@ class Test(unittest.TestCase):
         addr = '1600 amphitheatre mountain view ca'
         g = Geocoder()
         data = g.geocode(addr)
-        results = GeocoderResult(data)
-        result = results.next()
+        result = GeocoderResult(data)
 
         self.assertEqual(result.country__long_name, 'United States')
         self.assertEqual(result.postal_code, '94043')
@@ -76,8 +75,7 @@ class Test(unittest.TestCase):
         lat, lng = 40.714224, -73.961452
         g = Geocoder()
         data = g.reverse_geocode(lat, lng)
-        results = GeocoderResult(data)
-        result = results.next()
+        result = GeocoderResult(data)
 
         self.assertEqual(result.country__long_name, 'United States')
         self.assertEqual(result.postal_code, '11211')

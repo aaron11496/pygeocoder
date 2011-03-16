@@ -8,23 +8,22 @@
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 
-
 """
 Unit tests for pygeocoder.
 
 """
 
-
 import unittest
-import doctest
-    
-import pygeocoder
-from pygeocoder import Geocoder, GeocoderResult 
+
+from pygeocoder import Geocoder, GeocoderResult
 
 
 def searchkey(obj, key):
-    """Does BFS on JSON-like object `obj` to find a dict with a key == to `key` and 
-    returns the associated value.  Returns None if it didn't find `key`."""
+    """
+    Does BFS on JSON-like object `obj` to find a dict with a key == to `key`
+    and returns the associated value.  Returns None if it didn't find `key`.
+
+    """
     queue = [obj]
     while queue:
         item = queue.pop(0)
@@ -40,8 +39,10 @@ def searchkey(obj, key):
 
 
 class Test(unittest.TestCase):
-    """Unit tests for googlemaps."""
+    """
+    Unit tests for googlemaps.
 
+    """
     def test_geocode(self):
         """Test pygeocoder geocode() and address_to_latlng()"""
 
@@ -67,10 +68,11 @@ class Test(unittest.TestCase):
         self.assertAlmostEqual(lat, lat2, 3)
         self.assertAlmostEqual(lng, lng2, 3)
 
-
     def test_reverse_geocode(self):
-        """Test pygeocoder reverse_geocode() and latlng_to_address()"""
-        
+        """
+        Test pygeocoder reverse_geocode() and latlng_to_address()
+
+        """
         lat, lng = 40.714224, -73.961452
         g = Geocoder()
         data = g.reverse_geocode(lat, lng)
@@ -90,10 +92,10 @@ class Test(unittest.TestCase):
         lat2, lng2 = result.location
         self.assertAlmostEquals(lat, lat2, 3)
         self.assertAlmostEquals(lng, lng2, 3)
-        
+
         addr2 = g.latlng_to_address(lat, lng)
         self.assertEqual(addr, addr2)
 
-        
+
 if __name__ == "__main__":
     unittest.main()

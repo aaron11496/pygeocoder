@@ -7,6 +7,7 @@
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
+
 """
 Python wrapper for Google Geocoding API V3.
 
@@ -14,7 +15,6 @@ Python wrapper for Google Geocoding API V3.
 * **Reverse Geocoding**: find the nearest address to coordinates
 
 """
-
 
 import urllib
 import urllib2
@@ -24,7 +24,7 @@ except ImportError:
     import simplejson as json
 
 
-VERSION = '1.0'
+VERSION = '1.1'
 __all__ = ['Geocoder', 'GeocoderError', 'GeocoderResult']
 
 

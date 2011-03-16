@@ -1,14 +1,13 @@
-================================================================
+==============
 pygeocoder 1.0
-----------------------------------------------------------------
+==============
 Xiao Yu
 19/12/2010
 
-based on googlemaps 1.0.2 by John Kleint
-================================================================
+*Based on googlemaps 1.0.2 by John Kleint*
 
 README
-------------
+------
 
 This is a Python wrapper for Google Geocoding API V3
 
@@ -19,7 +18,7 @@ Dependencies
 ------------
 Its only dependency is the json module, included with Python versions 2.6 and
 later and available for download as simplejson for earlier versions.
-It is developed on Python 2.7 but should work on earlier versions
+It is developed on Python 2.7 but should work on earlier versions.
 
 
 Installation
@@ -33,7 +32,7 @@ or download the source from http://code.xster.net/pygeocoder and install
 	python setup.py install
 
 Usage
------------
+-----
 Please refer to http://code.xster.net/pygeocoder/wiki for help with usage
 
 
@@ -47,6 +46,8 @@ For comments, issues, requests, please contact via bitbucket at the above websit
 
 Changelog
 ---------
-Version 1.0
-Working version an API V3,
+Version 1.1
+Added GeocoderResult in order to ease field retrieval/result parsing.
 
+Version 1.0
+Working version an API V3

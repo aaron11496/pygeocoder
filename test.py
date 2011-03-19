@@ -48,8 +48,7 @@ class Test(unittest.TestCase):
 
         addr = '1600 amphitheatre mountain view ca'
         g = Geocoder()
-        data = g.geocode(addr)
-        result = GeocoderResult(data)
+        result = g.geocode(addr)
 
         self.assertEqual(result.country__long_name, 'United States')
         self.assertEqual(result.postal_code, '94043')
@@ -59,7 +58,7 @@ class Test(unittest.TestCase):
         self.assertEqual(result.administrative_area_level_1, 'CA')
         self.assertEqual(result.country, 'US')
         self.assertEqual(result.formatted_address, '1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA')
-        lat, lng = result.location
+        lat, lng = result.coordinates
         self.assertAlmostEquals(lat, 37.422125, 3)
         self.assertAlmostEquals(lng, -122.085984, 3)
 
@@ -74,8 +73,7 @@ class Test(unittest.TestCase):
         """
         lat, lng = 40.714224, -73.961452
         g = Geocoder()
-        data = g.reverse_geocode(lat, lng)
-        result = GeocoderResult(data)
+        result = g.reverse_geocode(lat, lng)
 
         self.assertEqual(result.country__long_name, 'United States')
         self.assertEqual(result.postal_code, '11211')
@@ -87,7 +85,7 @@ class Test(unittest.TestCase):
         self.assertEqual(result.country, 'US')
         addr = result.formatted_address
         self.assertEqual(addr, '279-281 Bedford Ave, Brooklyn, NY 11211, USA')
-        lat2, lng2 = result.location
+        lat2, lng2 = result.coordinates
         self.assertAlmostEquals(lat, lat2, 3)
         self.assertAlmostEquals(lng, lng2, 3)
 

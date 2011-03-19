@@ -115,7 +115,7 @@ class GeocoderResult(object):
         return self
     
     @property
-    def location(self):
+    def coordinates(self):
         """
         Return a (latitude, longitude) location pair of the current result
         """

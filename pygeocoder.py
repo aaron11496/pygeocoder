@@ -87,12 +87,12 @@ class GeocoderResult(object):
 	
 	You can also choose a different property to display for each lookup type.
 	Example:
-		result.country__long_name
+		result.country__short_name
 	
-	By default, use 'short_name' property of lookup type, so:
+	By default, use 'long_name' property of lookup type, so:
 		result.country
 	and:
-		result.country__short_name
+		result.country__long_name
 	are equivalent.
 	"""
 	def __init__(self, data):
@@ -109,6 +109,9 @@ class GeocoderResult(object):
 	def __getitem__(self, key):
 		self.current = self.data[key]
 		return self
+		
+	def __str__(self):
+		return self.formatted_address
 	
 	def next(self):
 		if self.count <= 0:
@@ -143,7 +146,7 @@ class GeocoderResult(object):
 		try:
 			prop = lookup[1]
 		except IndexError:
-			prop = 'short_name'
+			prop = 'long_name'
 		for elem in self.current['address_components']:
 			if attr in elem['types']:
 				return elem[prop]

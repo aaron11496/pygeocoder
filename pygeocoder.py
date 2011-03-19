@@ -340,7 +340,8 @@ if __name__ == "__main__":
 			sys.stderr.write('%s\n%s\nResponse:\n' % (err.url, err))
 			json.dump(err.response, sys.stderr, indent=4)
 			sys.exit(1)
-		json.dump(result, sys.stdout, indent=4)
-		sys.stdout.write('\n')
+			
+		import pprint
+		pprint.PrettyPrinter().pprint(result.raw)
 	
 	main()

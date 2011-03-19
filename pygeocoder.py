@@ -24,7 +24,7 @@ except ImportError:
 	import simplejson as json
 
 
-VERSION = '1.1'
+VERSION = '1.1.1'
 __all__ = ['Geocoder', 'GeocoderError', 'GeocoderResult']
 
 

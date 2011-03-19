@@ -1,5 +1,5 @@
 ==============
-pygeocoder 1.1
+pygeocoder 1.1.1
 ==============
 Xiao Yu
 19/12/2010
@@ -46,8 +46,12 @@ For comments, issues, requests, please contact via bitbucket at the above websit
 
 Changelog
 ---------
+Version 1.1.1
+Returns GeocoderResult by default. 
+Result set accessible by iterator or index.
+
 Version 1.1
 Added GeocoderResult in order to ease field retrieval/result parsing.
 
 Version 1.0
-Working version an API V3
+Working version an API V3.

@@ -25,7 +25,7 @@ setup(
     author_email='xiao@xiao-yu.com',
     url='http://code.xster.net/pygeocoder',
     download_url='https://bitbucket.org/xster/pygeocoder/downloads',
-    description='Python interface for Google Geocoding API V3.',
+    description='Lightweight Python interface for Google Geocoding API V3.',
     long_description=file(
         os.path.join(os.path.dirname(__file__), 'README.txt')
     ).read(),

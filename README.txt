@@ -2,7 +2,9 @@
 pygeocoder 1.1.1
 ==============
 Xiao Yu
-19/12/2010
+and
+Sébastien Fievet
+19/03/2010
 
 *Based on googlemaps 1.0.2 by John Kleint*
 

@@ -24,7 +24,7 @@ setup(
     author='Xiao Yu',
     author_email='xiao@xiao-yu.com',
     url='http://code.xster.net/pygeocoder',
-    download_url='https://bitbucket.org/xster/pygeocoder/downloads',
+    download_url='http://code.xster.net/pygeocoder/downloads',
     description='Lightweight Python interface for Google Geocoding API V3.',
     long_description=file(
         os.path.join(os.path.dirname(__file__), 'README.txt')
@@ -44,6 +44,6 @@ setup(
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    keywords='google maps ajax api geocode geocoding address gps json',
+    keywords='google maps ajax api geocode geocoding address gps json validation formatting',
     license='Lesser General Public License v3',
 )

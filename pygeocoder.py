@@ -24,7 +24,7 @@ except ImportError:
 	import simplejson as json
 
 
-VERSION = '1.1.1'
+VERSION = '1.1.2'
 __all__ = ['Geocoder', 'GeocoderError', 'GeocoderResult']
 
 
@@ -135,6 +135,13 @@ class GeocoderResult(object):
 		Returns the full result set in dictionary format
 		"""
 		return self.data
+		
+	@property
+	def valid_address(self):
+		"""
+		Returns true if queried address is valid street address
+		"""
+		return self.current['types'] == [u'street_address']
 	
 	@property
 	def formatted_address(self):
@@ -340,6 +347,9 @@ if __name__ == "__main__":
 			sys.stderr.write('%s\n%s\nResponse:\n' % (err.url, err))
 			json.dump(err.response, sys.stderr, indent=4)
 			sys.exit(1)
+		
+		print result
+		print
 			
 		import pprint
 		pprint.PrettyPrinter().pprint(result.raw)

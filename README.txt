@@ -1,5 +1,5 @@
 ==============
-pygeocoder 1.1.1
+pygeocoder 1.1.2
 ==============
 Xiao Yu
 and

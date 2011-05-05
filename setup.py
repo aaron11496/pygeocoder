@@ -25,7 +25,7 @@ setup(
     author_email='xiao@xiao-yu.com',
     url='http://code.xster.net/pygeocoder',
     download_url='http://code.xster.net/pygeocoder/downloads',
-    description='Python interface for Google Geocoding API V3. Can be used to easily geocode, reverse geocode, validate and format addresses',
+    description='Python interface for Google Geocoding API V3. Can be used to easily geocode, reverse geocode, validate and format addresses.',
     long_description=file(
         os.path.join(os.path.dirname(__file__), 'README.txt')
     ).read(),

@@ -1,5 +1,5 @@
 ==============
-pygeocoder 1.1.2
+pygeocoder 1.1.3
 ==============
 Xiao Yu
 and
@@ -48,6 +48,9 @@ For comments, issues, requests, please contact via bitbucket at the above websit
 
 Changelog
 ---------
+Version 1.1.3
+Made Geocoder methods static method while backward compatible
+
 Version 1.1.2
 Added address validation
 

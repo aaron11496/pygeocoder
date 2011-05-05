@@ -18,14 +18,23 @@ Python wrapper for Google Geocoding API V3.
 
 import urllib
 import urllib2
+import functools
 try:
 	import json
 except ImportError:
 	import simplejson as json
 
 
-VERSION = '1.1.2'
+VERSION = '1.1.3'
 __all__ = ['Geocoder', 'GeocoderError', 'GeocoderResult']
+
+# this decorator lets me use methods as both static and instance methods
+class omnimethod(object):
+	def __init__(self, func):
+		self.func = func
+		
+	def __get__(self, instance, owner):
+		return functools.partial(self.func, instance)
 
 
 class GeocoderError(Exception):
@@ -184,6 +193,7 @@ class Geocoder:
 		"""
 		self.api_key = api_key
 	
+	@omnimethod
 	def getdata(self, params={}):
 		"""Retrieve a JSON object from a (parameterized) URL.
 		
@@ -200,7 +210,7 @@ class Geocoder:
 		
 		"""
 		encoded_params = urllib.urlencode(params)
-		url = self.GEOCODE_QUERY_URL + encoded_params
+		url = Geocoder.GEOCODE_QUERY_URL + encoded_params
 		
 		request = urllib2.Request(url)
 		response = urllib2.urlopen(request)
@@ -210,6 +220,7 @@ class Geocoder:
 			raise GeocoderError(j['status'], url)
 		return j['results']
 	
+	@omnimethod
 	def geocode(self, address, sensor='false', bounds='', region='', language=''):
 		"""
 		Given a string address, return a dictionary of information about
@@ -244,8 +255,9 @@ class Geocoder:
 			'region':	region,
 			'language': language,
 		}
-		return GeocoderResult(self.getdata(params=params))
+		return GeocoderResult(Geocoder.getdata(params=params))
 	
+	@omnimethod
 	def reverse_geocode(self, lat, lng, sensor='false', bounds='', region='', language=''):
 		"""
 		Converts a (latitude, longitude) pair to an address.
@@ -276,8 +288,9 @@ class Geocoder:
 			'language': language,
 		}
 		
-		return GeocoderResult(self.getdata(params=params))
+		return GeocoderResult(Geocoder.getdata(params=params))
 	
+	@omnimethod
 	def address_to_latlng(self, address):
 		"""
 		Given a string `address`, return a `(latitude, longitude)` pair.
@@ -291,9 +304,10 @@ class Geocoder:
 		:raises GoogleMapsError: If the address could not be geocoded.
 		
 		"""
-		location = self.geocode(address).raw[0]['geometry']['location']
+		location = Geocoder.geocode(address).raw[0]['geometry']['location']
 		return location['lat'], location['lng']
 	
+	@omnimethod
 	def latlng_to_address(self, lat, lng):
 		"""
 		Given a latitude `lat` and longitude `lng`, return the closest address.
@@ -310,7 +324,7 @@ class Geocoder:
 		 to an address.
 		
 		"""
-		return self.reverse_geocode(lat, lng).raw[0]['formatted_address']
+		return Geocoder.reverse_geocode(lat, lng).raw[0]['formatted_address']
 
 if __name__ == "__main__":
 	import sys

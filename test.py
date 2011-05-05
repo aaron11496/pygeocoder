@@ -73,8 +73,7 @@ class Test(unittest.TestCase):
 
 		"""
 		lat, lng = 40.714224, -73.961452
-		g = Geocoder()
-		result = g.reverse_geocode(lat, lng)
+		result = Geocoder.reverse_geocode(lat, lng)
 
 		self.assertEqual(result.country__long_name, 'United States')
 		self.assertEqual(result.postal_code, '11211')
@@ -92,7 +91,7 @@ class Test(unittest.TestCase):
 		self.assertTrue(result.count > 1)
 		self.assertEqual(result[1].formatted_address, 'Williamsburg, Brooklyn, NY, USA')
 
-		addr2 = g.latlng_to_address(lat, lng)
+		addr2 = Geocoder.latlng_to_address(lat, lng)
 		self.assertEqual(addr, addr2)
 
 

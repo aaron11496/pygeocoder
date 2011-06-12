@@ -1,9 +1,9 @@
 ==============
-pygeocoder 1.1.3
+pygeocoder 1.1.4
 ==============
 Xiao Yu
-and
 Sébastien Fievet
+Marius Grigaitis
 19/03/2010
 
 *Based on googlemaps 1.0.2 by John Kleint*
@@ -49,6 +49,9 @@ For comments, issues, requests, please contact via bitbucket at the above websit
 
 Changelog
 ---------
+Version 1.1.4
+Fixed UTF-8 and facilitated command line usage
+
 Version 1.1.3
 Made Geocoder methods static method while backward compatible
 

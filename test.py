@@ -60,7 +60,7 @@ class Test(unittest.TestCase):
 		self.assertEqual(result.formatted_address, '1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA')
 		self.assertEqual(result.valid_address, True)
 		lat, lng = result.coordinates
-		self.assertAlmostEquals(lat, 37.4228327, 3)
+		self.assertAlmostEquals(lat, 37.4213068, 3)
 		self.assertAlmostEquals(lng, -122.0850778, 3)
 
 		(lat2, lng2) = g.address_to_latlng(addr)
@@ -89,7 +89,7 @@ class Test(unittest.TestCase):
 		self.assertAlmostEquals(lng, lng2, 3)
 		
 		self.assertTrue(result.count > 1)
-		self.assertEqual(result[1].formatted_address, 'Williamsburg, Brooklyn, NY, USA')
+		self.assertEqual(result[1].formatted_address, 'Williamsburg, NY, USA')
 
 		addr2 = Geocoder.latlng_to_address(lat, lng)
 		self.assertEqual(addr, addr2)

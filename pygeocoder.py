@@ -25,7 +25,7 @@ except ImportError:
 	import simplejson as json
 
 
-VERSION = '1.1.3'
+VERSION = '1.1.4'
 __all__ = ['Geocoder', 'GeocoderError', 'GeocoderResult']
 
 # this decorator lets me use methods as both static and instance methods
@@ -366,9 +366,5 @@ if __name__ == "__main__":
 			sys.exit(1)
 		
 		print result
-		print
-			
-		import pprint
-		pprint.PrettyPrinter().pprint(result.raw)
-	
+		print result.coordinates	
 	main()

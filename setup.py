@@ -31,7 +31,7 @@ setup(
     ).read(),
     py_modules=['pygeocoder'],
     provides=['pygeocoder'],
-    requires=['simplejson'],
+    requires=['simplejson', 'functools'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

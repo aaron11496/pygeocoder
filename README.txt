@@ -21,6 +21,7 @@ Dependencies
 Its only dependency is the json module, included with Python versions 2.6 and
 later and available for download as simplejson for earlier versions.
 It is developed on Python 2.7 but should work on earlier versions.
+functools is needed and included in Python 2.5
 
 
 Installation

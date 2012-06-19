@@ -10,11 +10,13 @@ Marius Grigaitis
 
 README
 ------
-
 This is a Python wrapper for Google Geocoding API V3
 
 It allows you to directly convert an address to coordinates or vice versa. It also allows you to validate, format and split addresses into civic number, street name, city etc.
 
+License
+------
+BSD
 
 Dependencies
 ------------

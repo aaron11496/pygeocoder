@@ -1,5 +1,5 @@
 ==============
-pygeocoder 1.1.4
+pygeocoder 1.2
 ==============
 Xiao Yu
 Sébastien Fievet
@@ -31,9 +31,9 @@ Installation
 You can install this package using pip:
 
 	sudo pip install pygeocoder
-	
+
 or download the source from http://code.xster.net/pygeocoder and install
-	
+
 	python setup.py install
 
 Usage
@@ -61,7 +61,7 @@ Version 1.1.2
 Added address validation
 
 Version 1.1.1
-Returns GeocoderResult by default. 
+Returns GeocoderResult by default.
 Result set accessible by iterator or index.
 
 Version 1.1

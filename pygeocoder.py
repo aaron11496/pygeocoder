@@ -16,9 +16,9 @@ Python wrapper for Google Geocoding API V3.
 
 """
 
-import urllib
-import urllib2
+import requests
 import functools
+from pygeolib import GeocoderError, GeocoderResult
 try:
     import json
 except ImportError:
@@ -38,147 +38,13 @@ class omnimethod(object):
         return functools.partial(self.func, instance)
 
 
-class GeocoderError(Exception):
-    """Base class for errors in the :mod:`pygeocoder` module.
-
-    Methods of the :class:`Geocoder` raise this when something goes wrong.
-
-    """
-    #: See http://code.google.com/apis/maps/documentation/geocoding/index.html#StatusCodes
-    #: for information on the meaning of these status codes.
-    G_GEO_OK = "OK"
-    G_GEO_ZERO_RESULTS = "ZERO_RESULTS"
-    G_GEO_OVER_QUERY_LIMIT = "OVER_QUERY_LIMIT"
-    G_GEO_REQUEST_DENIED = "REQUEST_DENIED"
-    G_GEO_MISSING_QUERY = "INVALID_REQUEST"
-
-    def __init__(self, status, url=None, response=None):
-        """Create an exception with a status and optional full response.
-
-        :param status: Either a ``G_GEO_`` code or a string explaining the
-         exception.
-        :type status: int or string
-        :param url: The query URL that resulted in the error, if any.
-        :type url: string
-        :param response: The actual response returned from Google, if any.
-        :type response: dict
-
-        """
-        Exception.__init__(self, status)        # Exception is an old-school class
-        self.status = status
-        self.url = url
-        self.response = response
-
-    def __str__(self):
-        """Return a string representation of this :exc:`GeocoderError`."""
-        return 'Error %s\nQuery: %s' % (self.status, self.url)
-
-    def __unicode__(self):
-        """Return a unicode representation of this :exc:`GeocoderError`."""
-        return unicode(self.__str__())
-
-
-class GeocoderResult(object):
-    """
-    A geocoder resultset to iterate through address results.
-    Exemple:
-
-    g = Geocoder()
-    data = g.geocode('paris, us')
-    results = GeocoderResult(data)
-    for result in results:
-        print result.formatted_address, result.location
-
-    Provide shortcut to ease field retrieval, looking at 'types' in each
-    'address_components'.
-    Example:
-        result.country
-        result.postal_code
-
-    You can also choose a different property to display for each lookup type.
-    Example:
-        result.country__short_name
-
-    By default, use 'long_name' property of lookup type, so:
-        result.country
-    and:
-        result.country__long_name
-    are equivalent.
-    """
-    def __init__(self, data):
-        self.data = data
-        self.count = self.len = len(self.data)
-        self.current = self.data[0]
-
-    def __len__(self):
-        return self.len
-
-    def __iter__(self):
-        return self
-
-    def __getitem__(self, key):
-        self.current = self.data[key]
-        return self
-
-    def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.formatted_address
-
-    def next(self):
-        if self.count <= 0:
-            raise StopIteration
-        index = self.len - self.count
-        self.current = self.data[index]
-        self.count -= 1
-        return self
-
-    @property
-    def coordinates(self):
-        """
-        Return a (latitude, longitude) coordinate pair of the current result
-        """
-        location = self.current['geometry']['location']
-        return location['lat'], location['lng']
-
-    @property
-    def raw(self):
-        """
-        Returns the full result set in dictionary format
-        """
-        return self.data
-
-    @property
-    def valid_address(self):
-        """
-        Returns true if queried address is valid street address
-        """
-        return self.current['types'] == [u'street_address']
-
-    @property
-    def formatted_address(self):
-        return self.current['formatted_address']
-
-    def __getattr__(self, name):
-        lookup = name.split('__')
-        attr = lookup[0]
-        try:
-            prop = lookup[1]
-        except IndexError:
-            prop = 'long_name'
-        for elem in self.current['address_components']:
-            if attr in elem['types']:
-                return elem[prop]
-
-
 class Geocoder:
     """
     A Python wrapper for Google Geocoding V3's API
 
     """
 
-    GEOCODE_QUERY_URL = 'http://maps.google.com/maps/api/geocode/json?'
+    GEOCODE_QUERY_URL = 'https://maps.google.com/maps/api/geocode/json?'
 
     def __init__(self, api_key=None):
         """
@@ -198,7 +64,7 @@ class Geocoder:
         self.api_key = api_key
 
     @omnimethod
-    def getdata(self, params={}):
+    def get_data(self, params={}):
         """Retrieve a JSON object from a (parameterized) URL.
 
         :param query_url: The base URL to query
@@ -213,16 +79,12 @@ class Geocoder:
         :rtype: (string, dict or array)
 
         """
-        encoded_params = urllib.urlencode(params)
-        url = Geocoder.GEOCODE_QUERY_URL + encoded_params
 
-        request = urllib2.Request(url)
-        response = urllib2.urlopen(request)
+        response = requests.get(Geocoder.GEOCODE_QUERY_URL, params=params).json()
 
-        j = json.load(response)
-        if j['status'] != GeocoderError.G_GEO_OK:
-            raise GeocoderError(j['status'], url)
-        return j['results']
+        if response['status'] != GeocoderError.G_GEO_OK:
+            raise GeocoderError(response['status'], response.url)
+        return response['results']
 
     @omnimethod
     def geocode(self, address, sensor='false', bounds='', region='', language=''):
@@ -259,7 +121,7 @@ class Geocoder:
             'region':   region,
             'language': language,
         }
-        return GeocoderResult(Geocoder.getdata(params=params))
+        return GeocoderResult(Geocoder.get_data(params=params))
 
     @omnimethod
     def reverse_geocode(self, lat, lng, sensor='false', bounds='', region='', language=''):
@@ -292,7 +154,7 @@ class Geocoder:
             'language': language,
         }
 
-        return GeocoderResult(Geocoder.getdata(params=params))
+        return GeocoderResult(Geocoder.get_data(params=params))
 
     @omnimethod
     def address_to_latlng(self, address):

@@ -1,11 +1,14 @@
-class GeocoderResult(object):
+import sys
+import collections
+
+class GeocoderResult(collections.Iterator):
     """
     A geocoder resultset to iterate through address results.
     Exemple:
 
     results = Geocoder.geocode('paris, us')
     for result in results:
-        print result.formatted_address, result.location
+        print(result.formatted_address, result.location)
 
     Provide shortcut to ease field retrieval, looking at 'types' in each
     'address_components'.
@@ -38,6 +41,13 @@ class GeocoderResult(object):
     def __iter__(self):
         return self
 
+    def return_next(self):
+        if self.current_index >= self.len:
+            raise StopIteration
+        self.current_data = self.data[self.current_index]
+        self.current_index += 1
+        return self
+
     def __getitem__(self, key):
         """
         Accessing GeocoderResult by index will return a GeocoderResult
@@ -45,18 +55,25 @@ class GeocoderResult(object):
         """
         return GeocoderResult([self.data[key]])
 
-    def __str__(self):
-        return unicode(self).encode('utf-8')
-
     def __unicode__(self):
         return self.formatted_address
 
-    def next(self):
-        if self.current_index >= self.len:
-            raise StopIteration
-        self.current_data = self.data[self.current_index]
-        self.current_index += 1
-        return self
+    if sys.version_info[0] >= 3:  # Python 3
+        def __str__(self):
+            return self.__unicode__()
+
+        def __next__(self):
+            return self.return_next()
+    else:  # Python 2
+        def __str__(self):
+            return self.__unicode__().encode('utf8')
+
+        def next(self):
+            return self.return_next()
+
+    @property
+    def count(self):
+        return self.len
 
     @property
     def coordinates(self):

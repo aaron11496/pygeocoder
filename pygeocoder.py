@@ -222,11 +222,11 @@ if __name__ == "__main__":
 
         try:
             result = gcoder.geocode(query)
-        except GeocoderError, err:
+        except GeocoderError as err:
             sys.stderr.write('%s\n%s\nResponse:\n' % (err.url, err))
             json.dump(err.response, sys.stderr, indent=4)
             sys.exit(1)
 
-        print result
-        print result.coordinates
+        print(result)
+        print(result.coordinates)
     main()

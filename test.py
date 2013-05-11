@@ -283,6 +283,7 @@ class Test(unittest.TestCase):
         self.assertEqual(result.city, 'Mountain View')
         self.assertEqual(result.administrative_area_level_1, 'California')
         self.assertEqual(result.state, 'California')
+        self.assertEqual(result.county, 'Santa Clara')
         self.assertEqual(result.country, 'United States')
         self.assertEqual(result.formatted_address, '1600 Amphitheatre Parkway, Mountain View, CA 94043, USA')
         self.assertEqual(result.valid_address, True)

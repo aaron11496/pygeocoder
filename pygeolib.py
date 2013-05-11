@@ -26,6 +26,14 @@ class GeocoderResult(collections.Iterator):
         result.country__long_name
     are equivalent.
     """
+
+    attribute_mapping = {
+        "state": "administrative_area_level_1",
+        "province": "administrative_area_level_1",
+        "city": "locality",
+        "county": "administrative_area_level_2",
+    }
+
     def __init__(self, data):
         """
         Creates instance of GeocoderResult from the provided JSON data array
@@ -105,11 +113,8 @@ class GeocoderResult(collections.Iterator):
         lookup = name.split('__')
         attribute = lookup[0]
 
-        if attribute == "state" or attribute == "province":
-            attribute = "administrative_area_level_1"
-
-        if attribute == "city":
-            attribute = "locality"
+        if (attribute in GeocoderResult.attribute_mapping):
+            attribute = GeocoderResult.attribute_mapping[attribute]
 
         try:
             prop = lookup[1]

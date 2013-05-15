@@ -18,6 +18,9 @@ Python wrapper for Google Geocoding API V3.
 
 import requests
 import functools
+import base64
+import hmac
+import hashlib
 from pygeolib import GeocoderError, GeocoderResult
 try:
     import json
@@ -38,7 +41,7 @@ class omnimethod(object):
         return functools.partial(self.func, instance)
 
 
-class Geocoder:
+class Geocoder(object):
     """
     A Python wrapper for Google Geocoding V3's API
 
@@ -46,45 +49,57 @@ class Geocoder:
 
     GEOCODE_QUERY_URL = 'https://maps.google.com/maps/api/geocode/json?'
 
-    def __init__(self, api_key=None):
+    def __init__(self, client_id=None, private_key=None):
         """
-        Create a new :class:`Geocoder` object using the given `api_key` and
+        Create a new :class:`Geocoder` object using the given `client_id` and
         `referrer_url`.
 
-        :param api_key: Google Maps Premier API key
-        :type api_key: string
-        :param referrer_url: URL of the website using or displaying information
-         from this module.
-        :type referrer_url: string
+        :param client_id: Google Maps Premier API key
+        :type client_id: string
 
         Google Maps API Premier users can provide his key to make 100,000 requests
         a day vs the standard 2,500 requests a day without a key
 
         """
-        self.api_key = api_key
+        self.client_id = str(client_id)
+        self.private_key = str(private_key)
 
     @omnimethod
     def get_data(self, params={}):
-        """Retrieve a JSON object from a (parameterized) URL.
+        """
+        Retrieve a JSON object from a (parameterized) URL.
 
-        :param query_url: The base URL to query
-        :type query_url: string
         :param params: Dictionary mapping (string) query parameters to values
         :type params: dict
-        :param headers: Dictionary giving (string) HTTP headers and values
-        :type headers: dict
-        :return: A `(url, json_obj)` tuple, where `url` is the final,
-        parameterized, encoded URL fetched, and `json_obj` is the data
-        fetched from that URL as a JSON-format object.
-        :rtype: (string, dict or array)
+        :return: JSON object with the data fetched from that URL as a JSON-format object.
+        :rtype: (dict or array)
 
         """
+        request = requests.Request('GET',
+                url = Geocoder.GEOCODE_QUERY_URL,
+                params = params,
+                headers = {
+                    'User-Agent': 'pygeocoder/' + VERSION + ' (Python)'
+                })
 
-        response = requests.get(Geocoder.GEOCODE_QUERY_URL, params=params).json()
+        if self and self.client_id and self.private_key:
+            self.add_signature(request)
 
-        if response['status'] != GeocoderError.G_GEO_OK:
-            raise GeocoderError(response['status'], response.url)
-        return response['results']
+        response = requests.Session().send(request.prepare())
+        if response.status_code == 403:
+            raise GeocoderError("Forbidden, 403", response.url)
+        response_json = response.json()
+
+        if response_json['status'] != GeocoderError.G_GEO_OK:
+            raise GeocoderError(response_json['status'], response.url)
+        return response_json['results']
+
+    @omnimethod
+    def add_signature(self, request):
+        decoded_key = base64.urlsafe_b64decode(self.private_key)
+        signature = hmac.new(decoded_key, request.url, hashlib.sha1)
+        encoded_signature = base64.urlsafe_b64encode(signature.digest())
+        request.params['signature'] = encoded_signature
 
     @omnimethod
     def geocode(self, address, sensor='false', bounds='', region='', language=''):
@@ -121,7 +136,10 @@ class Geocoder:
             'region':   region,
             'language': language,
         }
-        return GeocoderResult(Geocoder.get_data(params=params))
+        if self:
+            return GeocoderResult(self.get_data(params=params))
+        else:
+            return GeocoderResult(Geocoder.get_data(params=params))
 
     @omnimethod
     def reverse_geocode(self, lat, lng, sensor='false', bounds='', region='', language=''):
@@ -155,42 +173,6 @@ class Geocoder:
         }
 
         return GeocoderResult(Geocoder.get_data(params=params))
-
-    @omnimethod
-    def address_to_latlng(self, address):
-        """
-        Given a string `address`, return a `(latitude, longitude)` pair.
-
-        This is a simplified wrapper for :meth:`geocode()`.
-
-        :param address: The postal address to geocode.
-        :type address: string
-        :return: `(latitude, longitude)` of `address`.
-        :rtype: (float, float)
-        :raises GoogleMapsError: If the address could not be geocoded.
-
-        """
-        location = Geocoder.geocode(address).raw[0]['geometry']['location']
-        return location['lat'], location['lng']
-
-    @omnimethod
-    def latlng_to_address(self, lat, lng):
-        """
-        Given a latitude `lat` and longitude `lng`, return the closest address.
-
-        This is a simplified wrapper for :meth:`reverse_geocode()`.
-
-        :param lat: latitude
-        :type lat: float
-        :param lng: longitude
-        :type lng: float
-        :return: Closest postal address to `(lat, lng)`, if any.
-        :rtype: string
-        :raises GoogleMapsError: if the coordinates could not be converted
-         to an address.
-
-        """
-        return Geocoder.reverse_geocode(lat, lng).raw[0]['formatted_address']
 
 if __name__ == "__main__":
     import sys

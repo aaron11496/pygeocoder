@@ -61,8 +61,8 @@ class Geocoder(object):
         a day vs the standard 2,500 requests a day without a key
 
         """
-        self.client_id = str(client_id)
-        self.private_key = str(private_key)
+        self.client_id = client_id
+        self.private_key = private_key
 
     @omnimethod
     def get_data(self, params={}):
@@ -96,9 +96,10 @@ class Geocoder(object):
 
     @omnimethod
     def add_signature(self, request):
-        decoded_key = base64.urlsafe_b64decode(self.private_key)
+        decoded_key = base64.urlsafe_b64decode(str(self.private_key))
         signature = hmac.new(decoded_key, request.url, hashlib.sha1)
         encoded_signature = base64.urlsafe_b64encode(signature.digest())
+        request.params['client'] = str(self.client_id)
         request.params['signature'] = encoded_signature
 
     @omnimethod
@@ -136,7 +137,7 @@ class Geocoder(object):
             'region':   region,
             'language': language,
         }
-        if self:
+        if self is not None:
             return GeocoderResult(self.get_data(params=params))
         else:
             return GeocoderResult(Geocoder.get_data(params=params))
@@ -172,7 +173,10 @@ class Geocoder(object):
             'language': language,
         }
 
-        return GeocoderResult(Geocoder.get_data(params=params))
+        if self is not None:
+            return GeocoderResult(self.get_data(params=params))
+        else:
+            return GeocoderResult(Geocoder.get_data(params=params))
 
 if __name__ == "__main__":
     import sys

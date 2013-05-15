@@ -313,6 +313,8 @@ class Test(unittest.TestCase):
         lat2, lng2 = result.coordinates
         self.assertAlmostEqual(lat, lat2, 3)
         self.assertAlmostEqual(lng, lng2, 3)
+        self.assertAlmostEqual(lat, result.latitude, 3)
+        self.assertAlmostEqual(lng, result.longitude, 3)
         self.assertTrue(result.count > 1)
 
 if __name__ == "__main__":

@@ -92,6 +92,14 @@ class GeocoderResult(collections.Iterator):
         return location['lat'], location['lng']
 
     @property
+    def latitude(self):
+        return self.coordinates[0]
+
+    @property
+    def longitude(self):
+        return self.coordinates[1]
+
+    @property
     def raw(self):
         """
         Returns the full result set in dictionary format

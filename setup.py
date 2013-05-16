@@ -29,21 +29,22 @@ setup(
     long_description=file(
         os.path.join(os.path.dirname(__file__), 'README.txt')
     ).read(),
-    py_modules=['pygeocoder'],
+    py_modules=['pygeocoder', 'pygeolib'],
     provides=['pygeocoder'],
-    requires=['simplejson', 'functools'],
+    requires=['json', 'functools', 'requests', 'base64', 'hmac', 'hashlib'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2',
-        'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: BSD License',
         'Topic :: Internet',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     keywords='google maps ajax api geocode geocoding address gps json validation formatting',
-    license='Lesser General Public License v3',
+    license='BSD',
 )

@@ -20,10 +20,10 @@ BSD
 
 Dependencies
 ------------
-Its only dependency is the json module, included with Python versions 2.6 and
+It has dependency on the json module, included with Python versions 2.6 and
 later and available for download as simplejson for earlier versions.
-It is developed on Python 2.7 but should work on earlier versions.
-functools is needed and included in Python 2.5
+functools is needed and included in Python 2.5.
+It is developed on Python 2.7 but should work on earlier versions. It is also compatible with Python 3.
 
 
 Installation
@@ -46,11 +46,17 @@ Contact Information
 Author: Xiao Yu
 Internet: http://code.xster.net/pygeocoder
 
-For comments, issues, requests, please contact via bitbucket at the above website
+For comments, issues, requests, please contact via BitBucket at the above website
 
 
 Changelog
 ---------
+Version 1.2
+Refactor and unit testing
+Changed license to BSD
+Python 3 compatibility
+Business API account support
+
 Version 1.1.4
 Fixed UTF-8 and facilitated command line usage
 

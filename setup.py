@@ -16,11 +16,11 @@ Distutils setup script for pygeocoder module.
 import os
 from distutils.core import setup
 
-import pygeocoder
+from __version__ import VERSION
 
 setup(
     name='pygeocoder',
-    version=pygeocoder.VERSION,
+    version=VERSION,
     author='Xiao Yu',
     author_email='xiao@xiao-yu.com',
     url='http://code.xster.net/pygeocoder',

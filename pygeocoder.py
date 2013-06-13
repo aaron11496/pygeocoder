@@ -22,6 +22,7 @@ import base64
 import hmac
 import hashlib
 from pygeolib import GeocoderError, GeocoderResult
+from __version__ import VERSION
 try:
     import json
 except ImportError:

@@ -29,7 +29,7 @@ setup(
     long_description=file(
         os.path.join(os.path.dirname(__file__), 'README.txt')
     ).read(),
-    py_modules=['pygeocoder', 'pygeolib'],
+    py_modules=['pygeocoder', 'pygeolib', '__version__'],
     provides=['pygeocoder'],
     requires=['json', 'functools', 'requests', 'base64', 'hmac', 'hashlib'],
     classifiers=[

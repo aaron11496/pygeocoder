@@ -23,13 +23,12 @@ import hmac
 import hashlib
 from pygeolib import GeocoderError, GeocoderResult
 from __version__ import VERSION
+
 try:
     import json
 except ImportError:
     import simplejson as json
 
-
-VERSION = '1.2'
 __all__ = ['Geocoder', 'GeocoderError', 'GeocoderResult']
 
 

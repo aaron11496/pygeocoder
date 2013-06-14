@@ -1,6 +1,6 @@
-==============
-pygeocoder 1.2
-==============
+==================
+pygeocoder 1.2.0.1
+==================
 Xiao Yu
 Sébastien Fievet
 Marius Grigaitis
@@ -51,6 +51,9 @@ For comments, issues, requests, please contact via BitBucket at the above websit
 
 Changelog
 ---------
+Version 1.2.0.1
+setup.py dependency fix
+
 Version 1.2
 Refactor and unit testing
 Changed license to BSD

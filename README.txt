@@ -1,5 +1,5 @@
 ==================
-pygeocoder 1.2.0.1
+pygeocoder 1.2.0.2
 ==================
 Xiao Yu
 Sébastien Fievet
@@ -51,6 +51,9 @@ For comments, issues, requests, please contact via BitBucket at the above websit
 
 Changelog
 ---------
+Version 1.2.0.2
+Minor setup.py Python 3 fix
+
 Version 1.2.0.1
 setup.py dependency fix
 

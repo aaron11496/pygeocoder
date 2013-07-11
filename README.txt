@@ -1,5 +1,5 @@
 ==================
-pygeocoder 1.2.0.2
+pygeocoder 1.2.0.3
 ==================
 Xiao Yu
 Sébastien Fievet

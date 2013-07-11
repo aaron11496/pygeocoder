@@ -20,9 +20,10 @@ BSD
 
 Dependencies
 ------------
-It has dependency on the json module, included with Python versions 2.6 and
-later and available for download as simplejson for earlier versions.
-functools is needed and included in Python 2.5.
+It has dependency on the json module, included with Python versions 2.6 and later and available for download as simplejson for earlier versions. functools is needed and included in Python 2.5. Requirement for hmac is included with Python 2.2. hashlib depends on Python 2.5. base64 depends on Python 2.4.
+
+requests library is needed and installed by setuptools.
+
 It is developed on Python 2.7 but should work on earlier versions. It is also compatible with Python 3.
 
 
@@ -51,6 +52,9 @@ For comments, issues, requests, please contact via BitBucket at the above websit
 
 Changelog
 ---------
+Version 1.2.0.3
+setup.py dependency fix
+
 Version 1.2.0.2
 Minor setup.py Python 3 fix
 

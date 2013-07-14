@@ -63,6 +63,15 @@ class Geocoder(object):
         """
         self.client_id = client_id
         self.private_key = private_key
+        self.proxy = None
+
+    def set_proxy(self, proxy):
+        """
+        Makes every HTTP request to Google geocoding server use the supplied proxy
+        :param proxy: Proxy server string. Can be in the form "10.0.0.1:5000".
+        :type proxy: string
+        """
+        self.proxy = proxy
 
     @omnimethod
     def get_data(self, params={}):
@@ -85,7 +94,14 @@ class Geocoder(object):
         if self and self.client_id and self.private_key:
             self.add_signature(request)
 
-        response = requests.Session().send(request.prepare())
+        session = requests.Session()
+
+        if self and self.proxy:
+            session.proxies = {'https': self.proxy}
+
+        response = session.send(request.prepare())
+        session.close()
+
         if response.status_code == 403:
             raise GeocoderError("Forbidden, 403", response.url)
         response_json = response.json()
@@ -137,6 +153,7 @@ class Geocoder(object):
             'region':   region,
             'language': language,
         }
+
         if self is not None:
             return GeocoderResult(self.get_data(params=params))
         else:

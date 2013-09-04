@@ -34,7 +34,7 @@ setup(
     py_modules=['pygeocoder', 'pygeolib', '__version__'],
     provides=['pygeocoder'],
     requires=['json', 'functools', 'base64', 'hmac', 'hashlib'],
-    install_requires=['requests >= 1.2'],
+    install_requires=['requests >= 1.0'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

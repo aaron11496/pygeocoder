@@ -84,8 +84,9 @@ class Geocoder(object):
         :rtype: (dict or array)
 
         """
-        request = requests.Request('GET', Geocoder.GEOCODE_QUERY_URL,
-                params=params,
+        request = requests.Request('GET',
+                url = Geocoder.GEOCODE_QUERY_URL,
+                params = params,
                 headers = {
                     'User-Agent': 'pygeocoder/' + VERSION + ' (Python)'
                 })

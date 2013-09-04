@@ -304,12 +304,12 @@ class Test(unittest.TestCase):
         self.assertEqual(result.street_number, '1600')
         self.assertEqual(result.route, 'Pennsylvania Avenue Northwest')
         self.assertEqual(result.administrative_area_level_1, 'District of Columbia')
-        self.assertEqual(result.city, 'Washington')
+        self.assertEqual(result.city, 'Washington, D.C.')
         self.assertEqual(result.state, 'District of Columbia')
         self.assertEqual(result.state__short_name, 'DC')
         self.assertEqual(result.country, 'United States')
         addr = result.formatted_address
-        self.assertEqual(addr, "1600 Pennsylvania Avenue Northwest, President's Park, Washington, DC 20500, USA")
+        self.assertEqual(addr, "1600 Pennsylvania Avenue Northwest, President's Park, Washington, D.C., DC 20500, USA")
         lat2, lng2 = result.coordinates
         self.assertAlmostEqual(lat, lat2, 3)
         self.assertAlmostEqual(lng, lng2, 3)

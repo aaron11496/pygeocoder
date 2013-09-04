@@ -291,6 +291,21 @@ class Test(unittest.TestCase):
         self.assertAlmostEqual(lat, 37.4228576, 2)
         self.assertAlmostEqual(lng, -122.0850647, 2)
 
+    def test_geocode_with_components(self):
+        """Test pygeocoder geocode()"""
+
+        addr = 'East London'
+        components = 'country:ZA'
+        g = Geocoder()
+
+        bare_result = g.geocode(addr)
+        self.assertEqual(bare_result.city, 'London')
+        self.assertEqual(bare_result.country, 'United Kingdom')
+
+        za_result = g.geocode(addr, components=components)
+        self.assertEqual(za_result.city, 'East London')
+        self.assertEqual(za_result.country, 'South Africa')
+
     def test_reverse_geocode(self):
         """
         Test pygeocoder reverse_geocode()

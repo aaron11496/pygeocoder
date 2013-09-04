@@ -119,7 +119,7 @@ class Geocoder(object):
         request.params['signature'] = encoded_signature
 
     @omnimethod
-    def geocode(self, address, sensor='false', bounds='', region='', language=''):
+    def geocode(self, address, sensor='false', bounds='', region='', language='', components=''):
         """
         Given a string address, return a dictionary of information about
         that location, including its latitude and longitude.
@@ -132,6 +132,8 @@ class Geocoder(object):
         :type bounds: string
         :param region: The region code, specified as a ccTLD ("top-level domain") two-character value for biasing
         :type region: string
+        :param components: The components to use when restricting the search results.
+        :type components: string
         :param language: The language in which to return results.
         :type language: string
         :returns: `geocoder return value`_ dictionary
@@ -152,6 +154,7 @@ class Geocoder(object):
             'bounds':   bounds,
             'region':   region,
             'language': language,
+            'components': components,
         }
 
         if self is not None:

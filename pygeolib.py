@@ -92,6 +92,13 @@ class GeocoderResult(collections.Iterator):
         return location['lat'], location['lng']
 
     @property
+    def location_type(self):
+        """
+        Return location type for current result
+        """
+        return self.current_data['geometry']['location_type']
+
+    @property
     def latitude(self):
         return self.coordinates[0]
 

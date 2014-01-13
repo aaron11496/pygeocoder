@@ -52,6 +52,9 @@ For comments, issues, requests, please contact via BitBucket at the above websit
 
 Changelog
 ---------
+Version 1.2.2
+Added components restrictions in searches and location type getter in result
+
 Version 1.2.1.1
 Another dependency fix
 

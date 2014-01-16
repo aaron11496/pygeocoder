@@ -65,59 +65,6 @@ class Geocoder(object):
         self.private_key = private_key
         self.proxy = None
 
-    def set_proxy(self, proxy):
-        """
-        Makes every HTTP request to Google geocoding server use the supplied proxy
-        :param proxy: Proxy server string. Can be in the form "10.0.0.1:5000".
-        :type proxy: string
-        """
-        self.proxy = proxy
-
-    @omnimethod
-    def get_data(self, params={}):
-        """
-        Retrieve a JSON object from a (parameterized) URL.
-
-        :param params: Dictionary mapping (string) query parameters to values
-        :type params: dict
-        :return: JSON object with the data fetched from that URL as a JSON-format object.
-        :rtype: (dict or array)
-
-        """
-        request = requests.Request('GET',
-                url = Geocoder.GEOCODE_QUERY_URL,
-                params = params,
-                headers = {
-                    'User-Agent': 'pygeocoder/' + VERSION + ' (Python)'
-                })
-
-        if self and self.client_id and self.private_key:
-            self.add_signature(request)
-
-        session = requests.Session()
-
-        if self and self.proxy:
-            session.proxies = {'https': self.proxy}
-
-        response = session.send(request.prepare())
-        session.close()
-
-        if response.status_code == 403:
-            raise GeocoderError("Forbidden, 403", response.url)
-        response_json = response.json()
-
-        if response_json['status'] != GeocoderError.G_GEO_OK:
-            raise GeocoderError(response_json['status'], response.url)
-        return response_json['results']
-
-    @omnimethod
-    def add_signature(self, request):
-        decoded_key = base64.urlsafe_b64decode(str(self.private_key))
-        signature = hmac.new(decoded_key, request.url, hashlib.sha1)
-        encoded_signature = base64.urlsafe_b64encode(signature.digest())
-        request.params['client'] = str(self.client_id)
-        request.params['signature'] = encoded_signature
-
     @omnimethod
     def geocode(self, address, sensor='false', bounds='', region='', language='', components=''):
         """
@@ -197,6 +144,59 @@ class Geocoder(object):
             return GeocoderResult(self.get_data(params=params))
         else:
             return GeocoderResult(Geocoder.get_data(params=params))
+
+    def set_proxy(self, proxy):
+        """
+        Makes every HTTP request to Google geocoding server use the supplied proxy
+        :param proxy: Proxy server string. Can be in the form "10.0.0.1:5000".
+        :type proxy: string
+        """
+        self.proxy = proxy
+
+    @omnimethod
+    def get_data(self, params={}):
+        """
+        Retrieve a JSON object from a (parameterized) URL.
+
+        :param params: Dictionary mapping (string) query parameters to values
+        :type params: dict
+        :return: JSON object with the data fetched from that URL as a JSON-format object.
+        :rtype: (dict or array)
+
+        """
+        request = requests.Request('GET',
+                url = Geocoder.GEOCODE_QUERY_URL,
+                params = params,
+                headers = {
+                    'User-Agent': 'pygeocoder/' + VERSION + ' (Python)'
+                })
+
+        if self and self.client_id and self.private_key:
+            self.add_signature(request)
+
+        session = requests.Session()
+
+        if self and self.proxy:
+            session.proxies = {'https': self.proxy}
+
+        response = session.send(request.prepare())
+        session.close()
+
+        if response.status_code == 403:
+            raise GeocoderError("Forbidden, 403", response.url)
+        response_json = response.json()
+
+        if response_json['status'] != GeocoderError.G_GEO_OK:
+            raise GeocoderError(response_json['status'], response.url)
+        return response_json['results']
+
+    @omnimethod
+    def add_signature(self, request):
+        decoded_key = base64.urlsafe_b64decode(str(self.private_key))
+        signature = hmac.new(decoded_key, request.url, hashlib.sha1)
+        encoded_signature = base64.urlsafe_b64encode(signature.digest())
+        request.params['client'] = str(self.client_id)
+        request.params['signature'] = encoded_signature
 
 if __name__ == "__main__":
     import sys

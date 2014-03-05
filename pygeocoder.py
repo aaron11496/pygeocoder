@@ -21,6 +21,10 @@ import functools
 import base64
 import hmac
 import hashlib
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 from pygeolib import GeocoderError, GeocoderResult
 from __version__ import VERSION
 
@@ -192,10 +196,12 @@ class Geocoder(object):
 
     @omnimethod
     def add_signature(self, request):
-        decoded_key = base64.urlsafe_b64decode(str(self.private_key))
-        signature = hmac.new(decoded_key, request.url, hashlib.sha1)
-        encoded_signature = base64.urlsafe_b64encode(signature.digest())
         request.params['client'] = str(self.client_id)
+        decoded_key = base64.urlsafe_b64decode(self.private_key)
+        url = urlparse(request.url)
+        url_to_sign = url.path + "?" + url.query
+        signature = hmac.new(decoded_key, url_to_sign, hashlib.sha1)
+        encoded_signature = base64.urlsafe_b64encode(signature.digest())
         request.params['signature'] = encoded_signature
 
 if __name__ == "__main__":

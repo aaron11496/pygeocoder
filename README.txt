@@ -1,5 +1,5 @@
 ==================
-pygeocoder 1.2.1.1
+pygeocoder 1.2.3
 ==================
 Xiao Yu
 Sébastien Fievet
@@ -31,7 +31,7 @@ Installation
 ------------
 You can install this package using pip:
 
-	sudo pip install pygeocoder
+	pip install pygeocoder
 
 or download the source from http://code.xster.net/pygeocoder and install
 
@@ -52,6 +52,9 @@ For comments, issues, requests, please contact via BitBucket at the above websit
 
 Changelog
 ---------
+Version 1.2.3
+Fixed business key crypto error
+
 Version 1.2.2
 Added components restrictions in searches and location type getter in result
 

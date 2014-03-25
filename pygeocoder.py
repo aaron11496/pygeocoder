@@ -53,18 +53,25 @@ class Geocoder(object):
 
     GEOCODE_QUERY_URL = 'https://maps.google.com/maps/api/geocode/json?'
 
-    def __init__(self, client_id=None, private_key=None):
+    def __init__(self, api_key = None, client_id=None, private_key=None):
         """
         Create a new :class:`Geocoder` object using the given `client_id` and
-        `referrer_url`.
+        `private_key`.
 
-        :param client_id: Google Maps Premier API key
+        :param api_key: Google Maps Simple API key
+        :type api_key: string
+
+        :param client_id: Google Maps Premier client ID
+        :type client_id: string
+
+        :param private_key: Google Maps Premier API key
         :type client_id: string
 
         Google Maps API Premier users can provide his key to make 100,000 requests
         a day vs the standard 2,500 requests a day without a key
 
         """
+        self.api_key = api_key
         self.client_id = client_id
         self.private_key = private_key
         self.proxy = None
@@ -177,6 +184,8 @@ class Geocoder(object):
 
         if self and self.client_id and self.private_key:
             self.add_signature(request)
+        elif self and self.api_key:
+            request.params['key'] = self.api_key
 
         session = requests.Session()
 
@@ -194,7 +203,6 @@ class Geocoder(object):
             raise GeocoderError(response_json['status'], response.url)
         return response_json['results']
 
-    @omnimethod
     def add_signature(self, request):
         request.params['client'] = str(self.client_id)
         decoded_key = base64.urlsafe_b64decode(self.private_key)

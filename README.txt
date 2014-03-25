@@ -54,6 +54,7 @@ Changelog
 ---------
 Version 1.2.3
 Fixed business key crypto error
+Added back simple API authentication method
 
 Version 1.2.2
 Added components restrictions in searches and location type getter in result

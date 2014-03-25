@@ -331,5 +331,16 @@ class Test(unittest.TestCase):
         self.assertAlmostEqual(lng, result.longitude, 3)
         self.assertTrue(result.count > 1)
 
+    def test_geocode(self):
+        """Test Simple API access. May be flacky is too many people test with the test key"""
+
+        addr = '1600 amphitheatre mountain view ca'
+        api_key = 'AIzaSyBUnYj-u24fsbWdftSwbos7XcyQVqiuSao' # a throwaway test key
+        g = Geocoder(api_key=api_key)
+        result = g.geocode(addr)
+
+        self.assertEqual(result.state, 'California')
+        self.assertEqual(result.country, 'United States')
+
 if __name__ == "__main__":
     unittest.main()

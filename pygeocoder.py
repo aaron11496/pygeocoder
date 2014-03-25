@@ -53,7 +53,7 @@ class Geocoder(object):
 
     GEOCODE_QUERY_URL = 'https://maps.google.com/maps/api/geocode/json?'
 
-    def __init__(self, api_key = None, client_id=None, private_key=None):
+    def __init__(self, api_key=None, client_id=None, private_key=None):
         """
         Create a new :class:`Geocoder` object using the given `client_id` and
         `private_key`.
@@ -67,8 +67,8 @@ class Geocoder(object):
         :param private_key: Google Maps Premier API key
         :type client_id: string
 
-        Google Maps API Premier users can provide his key to make 100,000 requests
-        a day vs the standard 2,500 requests a day without a key
+        Google Maps API Premier users can provide his key to make 100,000
+        requests a day vs the standard 2,500 requests a day without a key
 
         """
         self.api_key = api_key
@@ -175,12 +175,13 @@ class Geocoder(object):
         :rtype: (dict or array)
 
         """
-        request = requests.Request('GET',
-                url = Geocoder.GEOCODE_QUERY_URL,
-                params = params,
-                headers = {
-                    'User-Agent': 'pygeocoder/' + VERSION + ' (Python)'
-                })
+        request = requests.Request(
+            'GET',
+            url=Geocoder.GEOCODE_QUERY_URL,
+            params=params,
+            headers={
+                'User-Agent': 'pygeocoder/' + VERSION + ' (Python)'
+            })
 
         if self and self.client_id and self.private_key:
             self.add_signature(request)

@@ -1,5 +1,5 @@
 ==================
-pygeocoder 1.2.3
+pygeocoder 1.2.3.1
 ==================
 Xiao Yu
 Sébastien Fievet
@@ -52,6 +52,9 @@ For comments, issues, requests, please contact via BitBucket at the above websit
 
 Changelog
 ---------
+Version 1.2.3.1
+Some pep8 cleanup
+
 Version 1.2.3
 Fixed business key crypto error
 Added back simple API authentication method

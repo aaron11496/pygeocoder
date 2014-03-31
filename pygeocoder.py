@@ -205,13 +205,21 @@ class Geocoder(object):
         return response_json['results']
 
     def add_signature(self, request):
-        request.params['client'] = str(self.client_id)
-        decoded_key = base64.urlsafe_b64decode(self.private_key)
-        url = urlparse(request.url)
-        url_to_sign = url.path + "?" + url.query
-        signature = hmac.new(decoded_key, url_to_sign, hashlib.sha1)
-        encoded_signature = base64.urlsafe_b64encode(signature.digest())
-        request.params['signature'] = encoded_signature
+        """
+        Add the client_id and signature parameters to the URL
+        Based on http://gmaps-samples.googlecode.com/svn/trunk/urlsigning/urlsigner.py            
+        See https://developers.google.com/maps/documentation/business/webservices/auth#signature_examples
+        :return: requests.Request object of type 'GET'
+        """
+        inputStr = request.prepare().url + '&client=' + self.client_id
+        url = urlparse(inputStr)
+        urlToSign = url.path + "?" + url.query
+        decodedKey = base64.urlsafe_b64decode(self.private_key)
+        signature = hmac.new(decodedKey, urlToSign, hashlib.sha1)
+        encodedSignature = base64.urlsafe_b64encode(signature.digest())
+        urlSigned = inputStr + '&signature=' + encodedSignature
+        request = requests.Request('GET', urlSigned)
+        
 
 if __name__ == "__main__":
     import sys

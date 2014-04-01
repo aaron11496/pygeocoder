@@ -52,6 +52,7 @@ class Geocoder(object):
     """
 
     GEOCODE_QUERY_URL = 'https://maps.google.com/maps/api/geocode/json?'
+    USER_AGENT = 'pygeocoder/' + VERSION + ' (Python)'
 
     def __init__(self, api_key=None, client_id=None, private_key=None):
         """
@@ -180,7 +181,7 @@ class Geocoder(object):
             url=Geocoder.GEOCODE_QUERY_URL,
             params=params,
             headers={
-                'User-Agent': 'pygeocoder/' + VERSION + ' (Python)'
+                'User-Agent': Geocoder.USER_AGENT
             })
 
         if self and self.client_id and self.private_key:
@@ -207,7 +208,7 @@ class Geocoder(object):
     def add_signature(self, request):
         """
         Add the client_id and signature parameters to the URL
-        Based on http://gmaps-samples.googlecode.com/svn/trunk/urlsigning/urlsigner.py            
+        Based on http://gmaps-samples.googlecode.com/svn/trunk/urlsigning/urlsigner.py
         See https://developers.google.com/maps/documentation/business/webservices/auth#signature_examples
         :return: requests.Request object of type 'GET'
         """
@@ -218,8 +219,13 @@ class Geocoder(object):
         signature = hmac.new(decodedKey, urlToSign, hashlib.sha1)
         encodedSignature = base64.urlsafe_b64encode(signature.digest())
         urlSigned = inputStr + '&signature=' + encodedSignature
-        request = requests.Request('GET', urlSigned)
-        
+        request = requests.Request(
+            'GET',
+            url=urlSigned,
+            headers={
+                'User-Agent': Geocoder.USER_AGENT
+            })
+
 
 if __name__ == "__main__":
     import sys

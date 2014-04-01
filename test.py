@@ -335,7 +335,7 @@ class Test(unittest.TestCase):
         """Test Simple API access. May be flacky is too many people test with the test key"""
 
         addr = '1600 amphitheatre mountain view ca'
-        api_key = 'AIzaSyBUnYj-u24fsbWdftSwbos7XcyQVqiuSao' # a throwaway test key
+        api_key = 'AIzaSyBUnYj-u24fsbWdftSwbos7XcyQVqiuSao'  # a throwaway test key
         g = Geocoder(api_key=api_key)
         result = g.geocode(addr)
 

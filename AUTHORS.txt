@@ -3,3 +3,4 @@ Sébastien Fievet <zyegfryed@gmail.com>
 Rafael Floriano
 Florian Rathgeber
 Miguel Paolino
+Stephane Goldstein

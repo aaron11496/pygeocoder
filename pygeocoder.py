@@ -185,7 +185,7 @@ class Geocoder(object):
             })
 
         if self and self.client_id and self.private_key:
-            self.add_signature(request)
+            request = self.add_signature(request)
         elif self and self.api_key:
             request.params['key'] = self.api_key
 
@@ -225,6 +225,7 @@ class Geocoder(object):
             headers={
                 'User-Agent': Geocoder.USER_AGENT
             })
+        return request
 
 
 if __name__ == "__main__":

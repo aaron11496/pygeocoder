@@ -16,7 +16,7 @@ Unit tests for pygeocoder.
 import unittest
 
 from pygeocoder import Geocoder
-from pygeolib import GeocoderResult
+from pygeolib import GeocoderResult, GeocoderError
 import json
 
 
@@ -341,6 +341,22 @@ class Test(unittest.TestCase):
 
         self.assertEqual(result.state, 'California')
         self.assertEqual(result.country, 'United States')
+
+    def test_m4b_geocode(self):
+        """Test M4B API access.
+
+        This query fails on purpose, but we inspect and verify the signed URL is correct."""
+        addr = '1600 amphitheatre mountain view ca'
+        client_id = 'gme-businessname'
+        crypto_key = 'vNIXE0xscrmjlyV-12Nj_BvUPaw='
+        g = Geocoder(client_id=client_id, private_key=crypto_key)
+
+        with self.assertRaises(GeocoderError) as ex:
+          result = g.geocode(addr)
+        self.assertRegexpMatches(ex.exception.url, r'&signature=\w+=$', 'Signature must be at end of URL.')
+        self.assertRegexpMatches(ex.exception.url, r'&client=gme-businessname', 'URL must containg client id.')
+        self.assertRegexpMatches(ex.exception.url, r'&signature=Mz5FrLE4uSK6uON0vuOXbGMpv4Q=', 'Incorrect signature')
+
 
 if __name__ == "__main__":
     unittest.main()

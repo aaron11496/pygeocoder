@@ -343,7 +343,7 @@ class Test(unittest.TestCase):
         self.assertEqual(result.country, 'United States')
 
     def test_m4b_geocode(self):
-        """Test M4B API access.
+        """Test Business API access.
 
         This query fails on purpose, but we inspect and verify the signed URL is correct."""
         addr = '1600 amphitheatre mountain view ca'
@@ -352,8 +352,8 @@ class Test(unittest.TestCase):
         g = Geocoder(client_id=client_id, private_key=crypto_key)
 
         with self.assertRaises(GeocoderError) as ex:
-          result = g.geocode(addr)
-        self.assertRegexpMatches(ex.exception.url, r'&signature=\w+=$', 'Signature must be at end of URL.')
+            result = g.geocode(addr)
+        self.assertRegexpMatches(ex.exception.url, r'&signature=[a-zA-Z0-9-=]+$', 'Signature must be at end of URL.')
         self.assertRegexpMatches(ex.exception.url, r'&client=gme-businessname', 'URL must containg client id.')
         self.assertRegexpMatches(ex.exception.url, r'&signature=Mz5FrLE4uSK6uON0vuOXbGMpv4Q=', 'Incorrect signature')
 

@@ -1,10 +1,7 @@
 ==================
-pygeocoder 1.2.4
+pygeocoder 1.2.5
 ==================
 Xiao Yu
-Sébastien Fievet
-Marius Grigaitis
-19/03/2010
 
 *Based on googlemaps 1.0.2 by John Kleint*
 
@@ -52,8 +49,11 @@ For comments, issues, requests, please contact via BitBucket at the above websit
 
 Changelog
 ---------
+Version 1.2.5
+More business key fix
+
 Version 1.2.4
-Business key siging fix
+Business key signing fix
 
 Version 1.2.3.1
 Some pep8 cleanup

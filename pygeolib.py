@@ -168,7 +168,7 @@ class GeocoderError(Exception):
         :type response: dict
 
         """
-        Exception.__init__(self, status)        # Exception is an old-school class
+        Exception.__init__(self, status) # Exception is an old-school class
         self.status = status
         self.url = url
         self.response = response

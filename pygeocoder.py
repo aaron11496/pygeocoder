@@ -78,7 +78,14 @@ class Geocoder(object):
         self.proxy = None
 
     @omnimethod
-    def geocode(self, address, sensor='false', bounds='', region='', language='', components=''):
+    def geocode(
+        self,
+        address,
+        sensor='false',
+        bounds='',
+        region='',
+        language='',
+        components=''):
         """
         Given a string address, return a dictionary of information about
         that location, including its latitude and longitude.
@@ -216,16 +223,18 @@ class Geocoder(object):
         url = urlparse(inputStr)
         urlToSign = url.path + "?" + url.query
         decodedKey = base64.urlsafe_b64decode(self.private_key)
-        signature = hmac.new(decodedKey, urlToSign, hashlib.sha1)
+        signature = hmac.new(
+            decodedKey,
+            urlToSign.encode('utf-8'),
+            hashlib.sha1)
         encodedSignature = base64.urlsafe_b64encode(signature.digest())
-        urlSigned = inputStr + '&signature=' + encodedSignature
-        request = requests.Request(
+        urlSigned = inputStr + '&signature=' + encodedSignature.decode('utf-8')
+        return requests.Request(
             'GET',
             url=urlSigned,
             headers={
                 'User-Agent': Geocoder.USER_AGENT
             })
-        return request
 
 
 if __name__ == "__main__":

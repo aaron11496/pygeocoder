@@ -14,10 +14,12 @@ Unit tests for pygeocoder.
 """
 
 import unittest
+import requests
+import json
 
+from collections import OrderedDict
 from pygeocoder import Geocoder
 from pygeolib import GeocoderResult, GeocoderError
-import json
 
 
 def searchkey(obj, key):
@@ -331,7 +333,7 @@ class Test(unittest.TestCase):
         self.assertAlmostEqual(lng, result.longitude, 3)
         self.assertTrue(result.count > 1)
 
-    def test_geocode(self):
+    def test_simple_auth(self):
         """Test Simple API access. May be flacky is too many people test with the test key"""
 
         addr = '1600 amphitheatre mountain view ca'
@@ -342,20 +344,35 @@ class Test(unittest.TestCase):
         self.assertEqual(result.state, 'California')
         self.assertEqual(result.country, 'United States')
 
-    def test_m4b_geocode(self):
+    def test_business_auth(self):
         """Test Business API access.
 
         This query fails on purpose, but we inspect and verify the signed URL is correct."""
-        addr = '1600 amphitheatre mountain view ca'
+
+        # Create the query parameters to sign. The order matters.
+        params_to_sign = OrderedDict()
+        params_to_sign['address'] = '1600 amphitheatre mountain view ca'
+        params_to_sign['components'] = ''
+        params_to_sign['bounds'] = ''
+        params_to_sign['region'] = ''
+        params_to_sign['language'] = ''
+        params_to_sign['sensor'] = 'false'
+
+        request_to_sign = requests.Request(
+            'GET',
+            url=Geocoder.GEOCODE_QUERY_URL,
+            params=params_to_sign,
+            headers={
+                'User-Agent': Geocoder.USER_AGENT
+            })
         client_id = 'gme-businessname'
         crypto_key = 'vNIXE0xscrmjlyV-12Nj_BvUPaw='
         g = Geocoder(client_id=client_id, private_key=crypto_key)
-
-        with self.assertRaises(GeocoderError) as ex:
-            result = g.geocode(addr)
-        self.assertRegexpMatches(ex.exception.url, r'&signature=[a-zA-Z0-9-=]+$', 'Signature must be at end of URL.')
-        self.assertRegexpMatches(ex.exception.url, r'&client=gme-businessname', 'URL must containg client id.')
-        self.assertRegexpMatches(ex.exception.url, r'&signature=Mz5FrLE4uSK6uON0vuOXbGMpv4Q=', 'Incorrect signature')
+        signed_request = g.add_signature(request_to_sign)
+        self.assertRegexpMatches(signed_request.url, r'&signature=[a-zA-Z0-9-=]+$', 'Signature must be at end of URL.')
+        self.assertRegexpMatches(signed_request.url, r'&client=gme-businessname', 'URL must containg client id.')
+        # Verified against https://m4b-url-signer.appspot.com/
+        self.assertRegexpMatches(signed_request.url, r'&signature=7bVsUv6kyRHlG0DBAIhKHfX-96M=', 'Incorrect signature')
 
 
 if __name__ == "__main__":

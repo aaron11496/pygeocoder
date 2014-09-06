@@ -17,6 +17,7 @@ Python wrapper for Google Geocoding API V3.
 """
 
 import requests
+import requests_cache
 import functools
 import base64
 import hmac
@@ -54,7 +55,7 @@ class Geocoder(object):
     GEOCODE_QUERY_URL = 'https://maps.google.com/maps/api/geocode/json?'
     USER_AGENT = 'pygeocoder/' + VERSION + ' (Python)'
 
-    def __init__(self, api_key=None, client_id=None, private_key=None):
+    def __init__(self, api_key=None, client_id=None, private_key=None, cache_name=None):
         """
         Create a new :class:`Geocoder` object using the given `client_id` and
         `private_key`.
@@ -76,6 +77,8 @@ class Geocoder(object):
         self.client_id = client_id
         self.private_key = private_key
         self.proxy = None
+        if cache_name is not None:
+            requests_cache.install_cache(cache_name)
 
     @omnimethod
     def geocode(

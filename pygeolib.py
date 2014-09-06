@@ -119,7 +119,8 @@ class GeocoderResult(collections.Iterator):
         """
         Returns true if queried address is valid street address
         """
-        return self.current_data['types'] == [u'street_address']
+        types = self.current_data['types']
+        return (types == [u'street_address'] or types == [u'premise'])
 
     @property
     def formatted_address(self):
